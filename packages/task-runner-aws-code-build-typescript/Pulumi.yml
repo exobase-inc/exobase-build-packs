@@ -1,0 +1,6 @@
+name: exobase-task-runner-aws-code-build-typescript-template
+description: The Exobase template for a task runner on AWS Code Build in Typescript
+runtime:
+    name: nodejs
+    options:
+        typescript: true

@@ -1,0 +1,6 @@
+name: exobase-api-aws-lambda-typescript-template
+description: The Exobase template for an API on AWS Lambda in Typescript
+runtime:
+    name: nodejs
+    options:
+        typescript: true

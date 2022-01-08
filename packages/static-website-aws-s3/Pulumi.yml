@@ -1,0 +1,6 @@
+name: exobase-api-aws-lambda-typescript-template
+description: The Exobase template for a static website on AWS S3/CloudFront
+runtime:
+    name: nodejs
+    options:
+        typescript: true
