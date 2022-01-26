@@ -1,0 +1,1 @@
+# @exobase/static-website-aws-s3

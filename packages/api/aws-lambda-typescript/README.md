@@ -1,0 +1,1 @@
+# @exobase/api-aws-lambda-typescript
