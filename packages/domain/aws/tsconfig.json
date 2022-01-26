@@ -1,27 +1,18 @@
 {
   "compilerOptions": {
-      "allowJs": true,
-      "alwaysStrict": true,
-      "esModuleInterop": true,
-      "forceConsistentCasingInFileNames": true,
-      "isolatedModules": false,
-      "lib": ["dom", "es2017"],
-      "module": "commonjs",
-      "moduleResolution": "node",
-      "noEmit": false,
-      "noFallthroughCasesInSwitch": true,
-      "noUnusedLocals": true,
-      "noUnusedParameters": true,
-      "resolveJsonModule": true,
-      "skipLibCheck": true,
-      "strict": false,
-      "target": "esnext",
-      "experimentalDecorators": true,
-      "outDir": "build",
-      "strictPropertyInitialization": false,
-      "noImplicitAny": false,
-      "typeRoots": ["node_modules/@types"]
+    "outDir": "dist",
+    "lib": [
+      "es2016"
+    ],
+    "declaration": true,
+    "sourceMap": true
   },
-  "include": ["index.ts"],
-  "exclude": ["./node_modules", "**/*.test.ts"]
+  "include": [
+    "index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/*.test.ts"
+  ]
 }

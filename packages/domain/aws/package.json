@@ -1,7 +1,12 @@
 {
   "name": "@exobase/exo-aws-domain",
   "version": "0.0.1-alpha.0",
-  "main": "index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "author": "rayepps",
   "license": "MIT",
   "scripts": {
     "build": "tsc"
