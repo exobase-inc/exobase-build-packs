@@ -1,6 +1,6 @@
 {
   "name": "@exobase/api-aws-lambda-typescript",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
