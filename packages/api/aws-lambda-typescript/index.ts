@@ -4,6 +4,7 @@ import * as aws from '@pulumi/aws'
 import fs from 'fs-extra'
 import type { DeploymentContext } from '@exobase/client-js'
 import { AWSLambdaAPI } from '@exobase/pulumi-aws-lambda-api'
+import path from 'path'
 
 
 type Config = {
@@ -15,12 +16,16 @@ type Outputs = {
   url: pulumi.Output<string> | string
 }
 
-const main = async (): Promise<Outputs> => {
+const main = async ({
+  workingDir
+}: {
+  workingDir: string
+}): Promise<Outputs> => {
 
   //
   //  READ PROJECT CONFIG
   //
-  const context = await fs.readJSON('./context.json') as DeploymentContext
+  const context = await fs.readJSON(path.join(workingDir, 'context.json')) as DeploymentContext
   const {
     platform,
     service,
@@ -47,7 +52,7 @@ const main = async (): Promise<Outputs> => {
     [ev.name]: ev.value 
   }), {})
   const api = new AWSLambdaAPI('api', {
-    sourceDir: `${__dirname}/source`,
+    sourceDir: path.join(workingDir, 'source'),
     sourceExt: 'ts',
     distDirName: 'build',
     buildCommand: (() => {
