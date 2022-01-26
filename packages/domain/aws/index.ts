@@ -2,8 +2,8 @@ import _ from 'radash'
 // import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 // import * as awsx from '@pulumi/awsx'
+import type { DomainDeploymentContext } from '@exobase/client-js'
 import fs from 'fs-extra'
-import * as t from './types'
 
 
 const main = async (): Promise<void> => {
@@ -11,7 +11,7 @@ const main = async (): Promise<void> => {
   //
   //  READ PROJECT CONFIG
   //
-  const context = await fs.readJSON('./context.json') as t.DomainDeploymentContext
+  const context = await fs.readJSON('./context.json') as DomainDeploymentContext
   const { platform, domain } = context
 
   console.log('[PULUMI]: context')
@@ -99,4 +99,4 @@ const main = async (): Promise<void> => {
 
 }
 
-export default main()
+export default main

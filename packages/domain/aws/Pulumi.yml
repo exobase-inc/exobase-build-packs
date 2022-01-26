@@ -1,6 +1,0 @@
-name: exobase-aws-domain-template
-description: The Exobase template for a custom domain on AWS
-runtime:
-    name: nodejs
-    options:
-        typescript: true

@@ -2,7 +2,7 @@ import _ from 'radash'
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import fs from 'fs-extra'
-import {
+import type {
   DeploymentContext
 } from '@exobase/client-js'
 import {
@@ -59,4 +59,4 @@ const main = async (): Promise<Outputs> => {
   }
 }
 
-export default main()
+export default main

@@ -1,10 +1,10 @@
 {
-  "name": "api-aws-lambda-typescript",
-  "version": "0.0.1",
+  "name": "@exobase/api-aws-lambda-typescript",
+  "version": "0.0.0",
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node --transpile-only index.ts"
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",

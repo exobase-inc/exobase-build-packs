@@ -14,6 +14,9 @@
     }
   },
   "workspaces": [
-    "packages/*"
+    "packages/api/aws-lambda-typescript",
+    "packages/domain/aws",
+    "packages/static-website/aws-s3",
+    "packages/task-runner/aws-code-build-typescript"
   ]
 }

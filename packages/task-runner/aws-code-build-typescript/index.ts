@@ -5,7 +5,7 @@ import fs from 'fs-extra'
 import cmd from 'cmdish'
 import { AWSCodeBuildProject } from '@exobase/pulumi-aws-code-build'
 import { AWSLambdaAPI } from '@exobase/pulumi-aws-lambda-api'
-import { DeploymentContext } from '@exobase/client-js'
+import type { DeploymentContext } from '@exobase/client-js'
 import octo from 'octokit-downloader'
 
 
@@ -157,4 +157,4 @@ const toNumber = (value: string | number): number => {
   return value as number
 }
 
-export default main()
+export default main

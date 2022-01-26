@@ -2,7 +2,7 @@ import _ from 'radash'
 import * as pulumi from '@pulumi/pulumi'
 import * as aws from '@pulumi/aws'
 import fs from 'fs-extra'
-import { DeploymentContext } from '@exobase/client-js'
+import type { DeploymentContext } from '@exobase/client-js'
 import { AWSLambdaAPI } from '@exobase/pulumi-aws-lambda-api'
 
 
@@ -77,4 +77,4 @@ const toNumber = (value: string | number): number => {
   return value as number
 }
 
-export default main()
+export default main

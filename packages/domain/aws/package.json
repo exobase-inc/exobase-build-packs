@@ -1,10 +1,10 @@
 {
-  "name": "exo-aws-domain",
-  "version": "0.0.1",
+  "name": "@exobase/exo-aws-domain",
+  "version": "0.0.0",
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
-    "dev": "ts-node --transpile-only -e \"import x from './index'; x()\""
+    "build": "tsc"
   },
   "devDependencies": {
     "@types/node": "^14",
