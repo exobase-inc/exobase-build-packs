@@ -14,6 +14,7 @@ type Config = {
   useBridgeApi: boolean
   buildCommand: string
   bridgeApiKey?: string
+  dockerImage: string
 }
 
 type Outputs = {
@@ -53,12 +54,15 @@ const main = async (): Promise<Outputs> => {
   //
   //  CREATE CODE BUILD PROJECT
   //
-  new AWSCodeBuildProject(service.name, {
+  const project = new AWSCodeBuildProject(_.dashCase(service.name), {
     sourceDir: `${__dirname}/source`,
-    buildTimeoutSeconds: config.buildTimeoutSeconds,
+    buildTimeoutSeconds: toNumber(config.buildTimeoutSeconds),
     buildCommand: config.buildCommand,
-    image: 'node:16',
-    environmentVariables: deployment.config.environmentVariables
+    image: config.dockerImage, // 'node:16',
+    environmentVariables: deployment.config.environmentVariables.map(ev => ({
+      name: ev.name,
+      value: ev.value
+    }))
   }, { provider })
 
   if (!config.useBridgeApi) {
@@ -71,21 +75,55 @@ const main = async (): Promise<Outputs> => {
   //
   //  CREATE BRIDGE API
   //
+  //  A todo here is to version the bridge. Pull from specific
+  //  release version branch.
+  //
   await octo.download({
     from: 'https://github.com/exobase-inc/aws-cloud-build-trigger-bridge',
-    to: `${__dirname}/bridge`
+    to: `${__dirname}/bridge.zip`,
+    unzip: true
   })
-  const api = new AWSLambdaAPI('bridge', {
+  const api = new AWSLambdaAPI(_.dashCase(`${service.name}-bridge`), {
     sourceDir: `${__dirname}/bridge`,
     sourceExt: 'ts',
-    environmentVariables: [{
-      name: 'AWS_CODE_BUILD_PROJECT_NAME',
-      value: service.name
-    }, {
-      name: 'BRIDGE_API_KEY',
-      value: config.bridgeApiKey
-    }],
+    timeout: 1,
+    memory: 128,
+    runtime: 'nodejs14.x',
+    distDirName: 'build',
+    buildCommand: (() => {
+      const useNvm = !!process.env.USE_NVM
+      const nvmPrefix = 'source ~/.nvm/nvm.sh && nvm use && '
+      const cmd = 'yarn && yarn build && cp package.json ./build/package.json && cd build && yarn'
+      return `${useNvm ? nvmPrefix : ''}${cmd}`
+    })(),
+    environmentVariables: {
+      AWS_CODE_BUILD_PROJECT_NAME: project.project.name,
+      BRIDGE_API_KEY: config.bridgeApiKey
+    },
     domain: service.domain
+  }, { provider })
+
+  const lambdaStartBuildPolicy = new aws.iam.Policy("lambdaStartBuild", {
+    path: "/",
+    description: "IAM policy for logging from a lambda",
+    policy: pulumi.interpolate`{
+    "Version": "2012-10-17",
+    "Statement": [
+      {
+        "Action": [
+          "codebuild:StartBuild"
+        ],
+        "Effect": "Allow",
+        "Resource": "${project.project.arn}"
+      }
+    ]
+  }
+  `
+  }, { provider })
+
+  new aws.iam.RolePolicyAttachment("lambdaStartBuilds", {
+    role: api.role.name,
+    policyArn: lambdaStartBuildPolicy.arn,
   }, { provider })
 
   return {
@@ -112,6 +150,11 @@ const installSourceDependencies = async () => {
     if (err) throw err
   }
 
+}
+
+const toNumber = (value: string | number): number => {
+  if (_.isString) return parseInt(value as string)
+  return value as number
 }
 
 export default main()

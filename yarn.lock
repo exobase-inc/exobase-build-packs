@@ -65,10 +65,10 @@
   dependencies:
     "@exobase/client-builder" "^0.0.1"
 
-"@exobase/pulumi-aws-code-build@^0.0.1-alpha.0":
-  version "0.0.1-alpha.0"
-  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-code-build/-/pulumi-aws-code-build-0.0.1-alpha.0.tgz#9019af8ca61b2c1895d05a82bee3f656a0067949"
-  integrity sha512-D14MHR5Du4m+ZOk3Tu78Hi/fvGycS7Uw8gr9qoAlkqCPZPkSLrvdygTaMqSGg7PkSChnR+J/6BPvFCrhk2MYiQ==
+"@exobase/pulumi-aws-code-build@^0.0.1-alpha.2":
+  version "0.0.1-alpha.2"
+  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-code-build/-/pulumi-aws-code-build-0.0.1-alpha.2.tgz#a0230209f17861bb5d56c24c295a8ce9ef07040f"
+  integrity sha512-gopWg15YqROU4LfHFi7c6wjxe7E9fD/C6JGnSvA3bQodNPmvHbHMPzEGwwWwsEubY2hIUWMLwZ81Q1Ei+LWM0g==
   dependencies:
     "@pulumi/aws" "^4.0.0"
     "@pulumi/pulumi" "^3.0.0"
@@ -76,10 +76,21 @@
     fs-extra "^10.0.0"
     radash "^1.4.0"
 
-"@exobase/pulumi-aws-lambda-api@^0.0.1-alpha.2":
-  version "0.0.1-alpha.2"
-  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-lambda-api/-/pulumi-aws-lambda-api-0.0.1-alpha.2.tgz#df65eb7609415b0bffb306b2d4598cf72f621932"
-  integrity sha512-hvJCewpkhEGOgpqBZaiC9pUKyrl8xodZ3z9tKd25Aad2YF15E2bvO6ri4wb3vkj6Lv1HR1O0+wfKe7ZaQbwIhQ==
+"@exobase/pulumi-aws-code-build@^0.0.1-alpha.9":
+  version "0.0.1-alpha.9"
+  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-code-build/-/pulumi-aws-code-build-0.0.1-alpha.9.tgz#1f9294609324ae0d5cbfdf710719864b8166d154"
+  integrity sha512-fHN0NYxiT6ZMdjGkx3uFnR70CmlkcHtM9V6rLM+qQQUIeucqKzkQT6iiCiF/33YNiRaInm9142IZWMcc8jT+Sw==
+  dependencies:
+    "@pulumi/aws" "^4.0.0"
+    "@pulumi/pulumi" "^3.0.0"
+    cmdish "^1.0.0"
+    fs-extra "^10.0.0"
+    radash "^1.4.0"
+
+"@exobase/pulumi-aws-lambda-api@^0.0.1-alpha.10":
+  version "0.0.1-alpha.10"
+  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-lambda-api/-/pulumi-aws-lambda-api-0.0.1-alpha.10.tgz#6684d9a4dbcff9e54303397fc2273f6efdc1b174"
+  integrity sha512-6Z8gyrpJlJ9FeBYdiM0ODWbCWqiPSfstxCIy5rbVLSsIlO2DSdW+dEbiNw1hLGiiBUmlkUsBV/dfZdWYvDXLnw==
   dependencies:
     "@pulumi/aws" "^4.0.0"
     "@pulumi/awsx" "^0.30.0"
@@ -88,10 +99,10 @@
     fs-extra "^10.0.0"
     radash "^1.4.0"
 
-"@exobase/pulumi-aws-lambda-api@^0.0.1-alpha.4":
-  version "0.0.1-alpha.4"
-  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-lambda-api/-/pulumi-aws-lambda-api-0.0.1-alpha.4.tgz#85b24520f8ae1a3cf636cc672005a09d98b165bc"
-  integrity sha512-uY7Tn7b/9wRKH2cw0tZENuoPFvkeX3CF2P1j3yQap5zdeTZDOwkBDmJLtggbfy7Rhh/FaqyfQXYHPZT9/7QagA==
+"@exobase/pulumi-aws-lambda-api@^0.0.1-alpha.13":
+  version "0.0.1-alpha.13"
+  resolved "https://registry.yarnpkg.com/@exobase/pulumi-aws-lambda-api/-/pulumi-aws-lambda-api-0.0.1-alpha.13.tgz#cd4555feca6a9b2ccfda52e11045bd39e1274789"
+  integrity sha512-NMmlJCJjEpK+SGOLWrQ4NaJPUm+EcTnTdnBWuAglhS2iiW4aKDC7DU+tbNmk14QuK0yjorGP7+QqwSUd4bEiug==
   dependencies:
     "@pulumi/aws" "^4.0.0"
     "@pulumi/awsx" "^0.30.0"
@@ -3639,10 +3650,10 @@ object.getownpropertydescriptors@^2.0.3:
     define-properties "^1.1.3"
     es-abstract "^1.19.1"
 
-octokit-downloader@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/octokit-downloader/-/octokit-downloader-0.0.1.tgz#d97b4511714c128438c663ae17e120ffb6211e3e"
-  integrity sha512-ZAgnvDq/wcy4mSkptYA6jteed4nGgtFKUkG7qfWKNJf3NsOwvqdnew3bJC7z1qSzc3KDXucICPaJqtcB8qs8lg==
+octokit-downloader@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/octokit-downloader/-/octokit-downloader-0.0.6.tgz#278b08125ff83eda4307946c0b849e1e854b892b"
+  integrity sha512-JT5P1GjhZtQ55vAYs68NkWCxijhjxfax7fziwKOKnhKK/4aaq0Vym3oVkNnaS0Mk9T2IAfnOHgDpcmNJrF+dcg==
   dependencies:
     axios "^0.24.0"
     cmdish "^1.0.0"

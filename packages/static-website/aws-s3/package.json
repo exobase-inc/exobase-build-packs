@@ -1,0 +1,28 @@
+{
+  "name": "static-website-aws-s3",
+  "version": "0.0.1",
+  "main": "index.ts",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node --transpile-only index.ts"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^9.0.13",
+    "@types/mime": "^2.0.3",
+    "@types/node": "^14",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.3"
+  },
+  "dependencies": {
+    "@exobase/client-js": "^0.0.27",
+    "@exobase/pulumi-aws-code-build": "^0.0.1-alpha.2",
+    "@exobase/pulumi-aws-s3-static-website": "^0.0.1-alpha.15",
+    "@pulumi/aws": "^4.0.0",
+    "@pulumi/awsx": "^0.30.0",
+    "@pulumi/pulumi": "^3.0.0",
+    "cmdish": "^1.0.0",
+    "fs-extra": "^10.0.0",
+    "mime": "^3.0.0",
+    "radash": "^1.4.0"
+  }
+}
