@@ -1,5 +1,5 @@
 {
-  "name": "@exobase/aws-domain",
+  "name": "@exobase/domain-aws",
   "version": "0.0.1-alpha.3",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
