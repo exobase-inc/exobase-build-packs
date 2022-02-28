@@ -1,33 +1,33 @@
-import _ from "radash";
-import * as pulumi from "@pulumi/pulumi";
-import * as aws from "@pulumi/aws";
-import fs from "fs-extra";
-import type { DeploymentContext } from "@exobase/client-js";
-import { AWSLambdaAPI } from "@exobase/pulumi-aws-lambda-api";
-import path from "path";
+import _ from "radash"
+import * as pulumi from "@pulumi/pulumi"
+import * as aws from "@pulumi/aws"
+import fs from "fs-extra"
+import type { DeploymentContext } from "@exobase/client-js"
+import { AWSLambdaAPI } from "@exobase/pulumi-aws-lambda-api"
+import path from "path"
 
 type Config = {
-  timeout: number;
-  memory: number;
-};
+  timeout: number
+  memory: number
+}
 
 type Outputs = {
-  url: pulumi.Output<string> | string;
-};
+  url: pulumi.Output<string> | string
+}
 
 const main = async ({
   workingDir,
 }: {
-  workingDir: string;
-}): Promise<{ out: Outputs }> => {
+  workingDir: string
+}): Promise<Outputs> => {
   //
   //  READ PROJECT CONFIG
   //
   const context = (await fs.readJSON(
     path.join(workingDir, "context.json")
-  )) as DeploymentContext;
-  const { platform, service, deployment } = context;
-  const config = deployment.config.stack as Config;
+  )) as DeploymentContext
+  const { platform, service, deployment } = context
+  const config = deployment.config.stack as Config
 
   //
   //  SETUP PROVIDER
@@ -36,7 +36,7 @@ const main = async ({
     secretKey: platform.providers.aws.accessKeySecret,
     accessKey: platform.providers.aws.accessKeyId,
     region: platform.providers.aws.region as aws.Region,
-  });
+  })
 
   //
   //  CREATE API/LAMBDA RESOURCES
@@ -47,7 +47,7 @@ const main = async ({
       [ev.name]: ev.value,
     }),
     {}
-  );
+  )
   const api = new AWSLambdaAPI(
     "api",
     {
@@ -55,11 +55,11 @@ const main = async ({
       sourceExt: "ts",
       distDirName: "build",
       buildCommand: (() => {
-        const useNvm = !!process.env.USE_NVM;
-        const nvmPrefix = "source ~/.nvm/nvm.sh && nvm use && ";
+        const useNvm = !!process.env.USE_NVM
+        const nvmPrefix = "source ~/.nvm/nvm.sh && nvm use && "
         const cmd =
-          "yarn && yarn build && cp package.json ./build/package.json && cd build && yarn --prod";
-        return `${useNvm ? nvmPrefix : ""}${cmd}`;
+          "yarn && yarn build && cp package.json ./build/package.json && cd build && yarn --prod"
+        return `${useNvm ? nvmPrefix : ""}${cmd}`
       })(),
       runtime: "nodejs14.x",
       timeout: toNumber(config.timeout),
@@ -72,18 +72,16 @@ const main = async ({
       domain: service.domain,
     },
     { provider }
-  );
+  )
 
   return {
-    out: {
-      url: service.domain ? service.domain.fqd : api.api.url,
-    },
-  };
-};
+    url: service.domain ? service.domain.fqd : api.api.url,
+  }
+}
 
 const toNumber = (value: string | number): number => {
-  if (_.isString) return parseInt(value as string);
-  return value as number;
-};
+  if (_.isString) return parseInt(value as string)
+  return value as number
+}
 
-export default main;
+export default main
