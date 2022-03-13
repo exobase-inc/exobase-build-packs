@@ -59,6 +59,7 @@ const main = async ({
   //
   //  EXECUTE BUILD
   //
+  await cmd('nvm use 16', { cwd: path.resolve(workingDir, 'source') })
   await cmd('yarn', { cwd: path.resolve(workingDir, 'source') })
   await executeBuild(functions, path.resolve(workingDir, 'source'))
 
