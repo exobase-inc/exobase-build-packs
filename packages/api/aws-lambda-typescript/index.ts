@@ -96,13 +96,14 @@ const toNumber = (value: string | number): number => {
 
 const executeBuild = async (functions: ModuleFunction[], sourceDir: string) => {
   await cmd('rm -rf build', { cwd: sourceDir })
-  await Promise.all(functions.map(async func => {
+  const execute = async (func: ModuleFunction) => {
     console.log(`processing: ${func.module}/${func.function}.js`)
     await compile(func, sourceDir)
     console.log(`compiled: ${func.module}/${func.function}.js`)
     await zip(func, sourceDir)
     console.log(`zipped: ${func.module}/${func.function}.js -> ${func.module}/${func.function}.zip`)
-  }))
+  }
+  await Promise.all(functions.map(f => execute(f)))
 }
 
 const compile = async (func: ModuleFunction, sourceDir: string) => {
