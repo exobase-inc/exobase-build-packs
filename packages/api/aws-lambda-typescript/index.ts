@@ -33,6 +33,9 @@ const main = async ({
   const { platform, service, deployment } = context
   const config = deployment.config.stack as Config
 
+  console.log('x--> CONTEXT:')
+  console.log(JSON.stringify(context, null, 2))
+
   //
   //  SETUP PROVIDER
   //
@@ -49,6 +52,9 @@ const main = async ({
     path: path.resolve(workingDir, 'source'),
     ext: 'ts'
   })
+
+  console.log('x--> FUNCTIONS:')
+  console.log(functions)
 
   //
   //  EXECUTE BUILD
@@ -94,7 +100,7 @@ const toNumber = (value: string | number): number => {
 }
 
 
-const executeBuild = async (functions: ModuleFunction[], sourceDir: string) => {
+const executeBuild = async (functions: ModuleFunction[], sourceDir: string): Promise<void> => {
   await cmd('rm -rf build', { cwd: sourceDir })
   const execute = async (func: ModuleFunction) => {
     console.log(`processing: ${func.module}/${func.function}.js`)
@@ -103,7 +109,7 @@ const executeBuild = async (functions: ModuleFunction[], sourceDir: string) => {
     await zip(func, sourceDir)
     console.log(`zipped: ${func.module}/${func.function}.js -> ${func.module}/${func.function}.zip`)
   }
-  await Promise.all(functions.map(f => execute(f)))
+  await (Promise as any).allSettled(functions.map(f => execute(f)))
 }
 
 const compile = async (func: ModuleFunction, sourceDir: string) => {
