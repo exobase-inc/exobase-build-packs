@@ -59,7 +59,7 @@ const main = async ({
   //
   //  EXECUTE BUILD
   //
-  await cmd('nvm use 16', { cwd: path.resolve(workingDir, 'source') })
+  await cmd('~/.nvm/nvm.sh && nvm use 16', { cwd: path.resolve(workingDir, 'source') })
   await cmd('yarn', { cwd: path.resolve(workingDir, 'source') })
   await executeBuild(functions, path.resolve(workingDir, 'source'))
 
@@ -111,7 +111,7 @@ const executeBuild = async (functions: ModuleFunction[], sourceDir: string): Pro
     await zip(func, sourceDir)
     console.log(`zipped: ${func.module}/${func.function}.js -> ${func.module}/${func.function}.zip`)
   }
-  await (Promise as any).allSettled(functions.map(f => execute(f).catch((err) => {
+  await (Promise as any).allSettled([functions[0]].map(f => execute(f).catch((err) => {
     console.error(err)
     throw err
   })))
