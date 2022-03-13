@@ -137,7 +137,7 @@ const compile = async (func: ModuleFunction, sourceDir: string) => {
         }
       },
       (err, stats) => {
-        if (err || stats.hasErrors()) rej(err)
+        if (err || stats.hasErrors()) rej(err ?? { message: 'Webpack stats has error' })
         else res()
       }
     )
