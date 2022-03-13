@@ -4,7 +4,11 @@ import * as aws from "@pulumi/aws"
 import fs from "fs-extra"
 import type { DeploymentContext } from "@exobase/client-js"
 import { AWSLambdaAPI } from "@exobase/pulumi-aws-lambda-api"
+import { ModuleFunction, getFunctionMap } from '@exobase/builds'
 import path from "path"
+import cmd from 'cmdish'
+import webpack from 'webpack'
+import TerserPlugin from 'terser-webpack-plugin'
 
 type Config = {
   timeout: number
@@ -39,40 +43,45 @@ const main = async ({
   })
 
   //
+  //  READ FUNCTIONS
+  //
+  const functions = getFunctionMap({
+    path: path.resolve(workingDir, 'source'),
+    ext: 'ts'
+  })
+
+  //
+  //  EXECUTE BUILD
+  //
+  await executeBuild(functions, path.resolve(workingDir, 'source'))
+
+  //
   //  CREATE API/LAMBDA RESOURCES
   //
-  const envVarDict = deployment.config.environmentVariables.reduce(
-    (acc, ev) => ({
-      ...acc,
-      [ev.name]: ev.value,
-    }),
-    {}
-  )
-  const api = new AWSLambdaAPI(
-    "api",
-    {
-      sourceDir: path.join(workingDir, "source"),
-      sourceExt: "ts",
-      distDirName: "build",
-      buildCommand: (() => {
-        const useNvm = !!process.env.USE_NVM
-        const nvmPrefix = "source ~/.nvm/nvm.sh && nvm use && "
-        const cmd =
-          "yarn && yarn build && cp package.json ./build/package.json && cd build && yarn --prod"
-        return `${useNvm ? nvmPrefix : ""}${cmd}`
-      })(),
-      runtime: "nodejs14.x",
-      timeout: toNumber(config.timeout),
-      memory: toNumber(config.memory),
-      environmentVariables: {
-        ...envVarDict,
-        EXOBASE_PLATFORM: platform.name,
-        EXOBASE_SERVICE: service.name,
-      },
-      domain: service.domain,
+  const envVarDict = deployment.config.environmentVariables.reduce((acc, ev) => ({
+    ...acc,
+    [ev.name]: ev.value,
+  }), {})
+  const api = new AWSLambdaAPI(_.dashCase(service.name), {
+    sourceDir: path.join(workingDir, "source"),
+    sourceExt: "ts",
+    runtime: "nodejs14.x",
+    functions,
+    getZip: (func) => {
+      return new pulumi.asset.FileArchive(
+        path.resolve(workingDir, 'source', 'build', 'modules', func.module, `${func.function}.zip`)
+      )
     },
-    { provider }
-  )
+    getHandler: (func) => `${func.function}.default`,
+    timeout: toNumber(config.timeout),
+    memory: toNumber(config.memory),
+    environmentVariables: {
+      ...envVarDict,
+      EXOBASE_PLATFORM: platform.name,
+      EXOBASE_SERVICE: service.name,
+    },
+    domain: service.domain,
+  }, { provider })
 
   return {
     url: service.domain ? service.domain.fqd : api.api.url,
@@ -80,8 +89,64 @@ const main = async ({
 }
 
 const toNumber = (value: string | number): number => {
-  if (_.isString) return parseInt(value as string)
+  if (_.isString(value)) return parseInt(value as string)
   return value as number
+}
+
+
+const executeBuild = async (functions: ModuleFunction[], sourceDir: string) => {
+  await cmd('rm -rf build', { cwd: sourceDir })
+  await Promise.all(functions.map(async func => {
+    console.log(`processing: ${func.module}/${func.function}.js`)
+    await compile(func, sourceDir)
+    console.log(`compiled: ${func.module}/${func.function}.js`)
+    await zip(func, sourceDir)
+    console.log(`zipped: ${func.module}/${func.function}.js -> ${func.module}/${func.function}.zip`)
+  }))
+}
+
+const compile = async (func: ModuleFunction, sourceDir: string) => {
+  await new Promise<void>((res, rej) => {
+    webpack(
+      {
+        entry: [path.resolve(sourceDir, `src/modules/${func.module}/${func.function}.ts`)],
+        mode: (process.env.NODE_ENV as 'production' | 'development') ?? 'production',
+        target: 'node',
+        output: {
+          path: path.resolve(sourceDir, 'build', 'modules', func.module),
+          filename: `${func.function}.js`
+        },
+        resolve: {
+          extensions: ['.ts', '.js']
+        },
+        module: {
+          rules: [
+            {
+              test: /\.ts$/,
+              use: ['ts-loader']
+            }
+          ]
+        },
+        optimization: {
+          minimizer: [
+            new TerserPlugin({
+              extractComments: false
+            })
+          ]
+        }
+      },
+      (err, stats) => {
+        if (err || stats.hasErrors()) rej(err)
+        else res()
+      }
+    )
+  })
+}
+
+const zip = async (func: ModuleFunction, sourceDir: string) => {
+  await cmd(`zip -q ${func.function}.zip ${func.function}.js`, {
+    cwd: path.resolve(sourceDir, 'build', 'modules', func.module)
+  })
 }
 
 export default main
