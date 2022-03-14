@@ -96,14 +96,17 @@ const toNumber = (value: string | number): number => {
 
 const onlyOnce = <T> (key: string, func: () => Promise<T>) => async (): Promise<T> => {
   const cacheFilePath = path.resolve(process.cwd(), '.exo-operation-cache')
+  console.log('x--> ONLY ONCE:', cacheFilePath)
   const cache = await (async () => {
     const [notExists, existing] = await _.try(() => fs.readJSON(cacheFilePath))()
+    console.log({ notExists, existing })
     if (!notExists) return existing
     await fs.writeJSON(cacheFilePath, {})
     return {}
   })()
   if (cache[key]) return cache[key]
   const [err, result] = await _.try(func)()
+  console.log({ err, result})
   await fs.writeJSON(cacheFilePath, { ...cache, [key]: result })
   if (err) throw err
   else return result
